@@ -1,56 +1,50 @@
 # ============================
-# 1️. BUILD STAGE
+# 1. BASE STAGE
 # ============================
+FROM node:20-alpine AS base
 
-FROM node:20-alpine AS builder
-
-
-# Enable pnpm
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
-
+RUN corepack enable && corepack prepare pnpm@latest --activate
 WORKDIR /app
 
-# Copy dependency files
+# ============================
+# 2. DEPENDENCY STAGE
+# ============================
+FROM base AS deps
 COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 
-# Install deps with cache mount
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
-    pnpm install --frozen-lockfile
-
+# ============================
+# 3. BUILDER STAGE
+# ============================
+FROM base AS builder
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
-# Build app
-RUN pnpm build
-
+RUN pnpm run build
 
 # ============================
-# 2. PRODUCTION STAGE
+# 4. RUNNER STAGE
 # ============================
-
-
 FROM node:20-alpine AS runner
-
 WORKDIR /app
 
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
+ENV NODE_ENV=production
 
-# Copy only what's needed for runtime
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/pnpm-lock.yaml ./
+# Tạo user nextjs
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
 
-# Install only production deps
-RUN pnpm install --prod --frozen-lockfile --prefer-offline
+# Copy các file cần thiết
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
-# Expose app port
+USER nextjs
+
 EXPOSE 3000
 
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "./.next/standalone/server.js"]
+CMD ["node", "server.js"]
