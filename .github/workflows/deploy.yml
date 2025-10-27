@@ -144,7 +144,7 @@ jobs:
 
       - name: Check for known vulnerabilities
         run: |
-          if pnpm audit --audit-level high --json | jq '.vulnerabilities | length' | grep -q '^0$'$'; then
+          if pnpm audit --audit-level high --json | jq '.vulnerabilities | length' | grep -q '^0$'$'$'; then
             echo "No high-severity vulnerabilities found"
           else
             echo "High-severity vulnerabilities detected"
