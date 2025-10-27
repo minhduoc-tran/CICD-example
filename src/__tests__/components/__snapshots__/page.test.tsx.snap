@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Home Page Snapshot Tests should match snapshot 1`] = `
+<div
+  class="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black"
+>
+  <h1
+    class="text-4xl font-bold text-zinc-800 dark:text-zinc-200"
+  >
+    Next.js CI/CD with Docker
+  </h1>
+  <p
+    class="mt-4 text-lg text-zinc-600 dark:text-zinc-400"
+  >
+    This is a simple example of a Next.js application with CI/CD using Docker.
+  </p>
+</div>
+`;
+
+exports[`Home Page Snapshot Tests should match snapshot with providers 1`] = `
+<div
+  data-testid="mock-theme-provider"
+>
+  <div
+    data-testid="mock-router-provider"
+  >
+    <div
+      data-authenticated="false"
+      data-testid="mock-auth-provider"
+    >
+      <div
+        class="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black"
+      >
+        <h1
+          class="text-4xl font-bold text-zinc-800 dark:text-zinc-200"
+        >
+          Next.js CI/CD with Docker
+        </h1>
+        <p
+          class="mt-4 text-lg text-zinc-600 dark:text-zinc-400"
+        >
+          This is a simple example of a Next.js application with CI/CD using Docker.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
