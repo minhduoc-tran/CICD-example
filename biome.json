@@ -7,7 +7,23 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**", "!node_modules", "!.next", "!dist", "!build"]
+    "includes": [
+      "**",
+      "!node_modules",
+      "!.next",
+      "!dist",
+      "!build",
+      "!coverage",
+      "!test-results",
+      "!playwright-report",
+      "!**/__tests__",
+      "!**/tests",
+      "!**/*.test.*",
+      "!**/*.spec.*",
+      "!**/jest.setup.js",
+      "!**/jest.config.js",
+      "!**/playwright.config.ts"
+    ]
   },
   "formatter": {
     "enabled": true,
