@@ -30,5 +30,17 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "**/__tests__/**",
+    "**/tests/**",
+    "**/*.test.*",
+    "**/*.spec.*",
+    "jest.setup.js",
+    "jest.config.js",
+    "playwright.config.ts",
+    "coverage",
+    "test-results",
+    "playwright-report"
+  ]
 }
