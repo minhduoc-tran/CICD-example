@@ -1,4 +1,4 @@
-name: Next.js CI
+name: Next.js CI (pnpm)
 
 on:
   push:
@@ -18,18 +18,32 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Get pnpm store path
+        id: pnpm-cache
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Install deps
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: npm run lint
+        run: pnpm lint
 
-      # Nếu bạn có test (Jest/Vitest/Playwright), giữ lại.
-      # Nếu chưa có test, có thể tạm comment.
-      # - name: Test
-      #   run: npm test --if-present
+      - name: Test
+        run: pnpm test --if-present
 
       - name: Build
-        run: npm run build
+        run: pnpm build
